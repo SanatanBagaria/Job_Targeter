@@ -1,0 +1,40 @@
+:root {
+    --bg-app: #080711;
+    --bg-sidebar: #0f0e1d;
+    --bg-card: rgba(22, 20, 42, 0.6);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(112, 0, 255, 0.4);
+    --text-primary: #f3f3f6;
+    --text-secondary: #9ea0b6;
+    --primary-color: #7000ff;
+    --primary-glow: rgba(112, 0, 255, 0.35);
+    --accent-cyan: #00e5ff;
+    --accent-cyan-glow: rgba(0, 229, 255, 0.3);
+    --accent-pink: #ff007f;
+    --green-success: #00e676;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+.hidden {
+    display: none !important;
+}
