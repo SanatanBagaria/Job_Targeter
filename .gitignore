@@ -1,0 +1,28 @@
+# Credentials and keys
+.env
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.pyo
+
+# Local database fallback / temp outputs
+apply_queue.json
+resume.pdf
+
+# IDE settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

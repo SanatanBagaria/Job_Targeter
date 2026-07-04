@@ -1,0 +1,9 @@
+crewai
+crewai-tools
+python-dotenv
+PyPDF2
+litellm
+fastapi
+uvicorn
+requests
+pydantic
