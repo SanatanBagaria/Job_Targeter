@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Targeter - Auto Apply Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/loading.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation & Controls -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-glow"></div>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17M2 12L12 17L22 12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#7000ff"/>
+                            <stop offset="1" stop-color="#00e5ff"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1>Job Targeter</h1>
+            </div>
+
+            <!-- Drag & Drop PDF Upload Area -->
+            <div class="control-card">
+                <h3>Resume Upload</h3>
+                <div class="upload-zone" id="drop-zone">
+                    <input type="file" id="file-input" accept="application/pdf" style="display:none;">
+                    <div class="upload-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 16V8M12 8L9 11M12 8L15 11" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M3 15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15" stroke="#7000ff" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <p class="upload-title">Drag & Drop PDF</p>
+                    <p class="upload-subtitle">or click to browse files</p>
+                </div>
+                <div class="file-status hidden" id="file-status">
+                    <span class="file-icon">📄</span>
+                    <span class="file-name" id="file-name">resume.pdf</span>
+                    <span class="remove-file" id="remove-file">&times;</span>
+                </div>
+            </div>
+
+            <!-- Parameters Adjustments Form -->
+            <div class="control-card">
+                <h3>Apply Filters</h3>
+                <form id="settings-form" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="locations">Preferred Locations</label>
+                        <input type="text" id="locations" value="Remote, Bangalore, Dhanbad" placeholder="e.g. Remote, Bangalore">
+                    </div>
+                    <div class="form-group">
+                        <div class="slider-header">
+                            <label for="min-match">Min Match Score</label>
+                            <span class="slider-value" id="min-match-val">80%</span>
+                        </div>
+                        <input type="range" id="min-match" min="50" max="100" value="80" step="5">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btn-run" disabled>
+                        <span>Find Matching Jobs</span>
+                        <div class="btn-shine"></div>
+                    </button>
+                </form>
+            </div>
+
+            <div class="sidebar-footer">
+                <p>Status: <span id="pipeline-status" class="status-offline">Offline</span></p>
+            </div>
+        </aside>
+
+        <!-- Main Display Content Area -->
+        <main class="main-content">
+            <header class="main-header">
+                <div>
+                    <h2>Matched Opportunities</h2>
+                    <p>Highest matches based on your uploaded resume and policy constraints.</p>
+                </div>
+                <div class="header-badges">
+                    <div class="badge badge-indigo" id="badge-total-jobs">0 Found</div>
+                </div>
+            </header>
+
+            <!-- Grid container for Matched Jobs -->
+            <div class="jobs-grid" id="jobs-grid">
+                <div class="no-data" id="empty-state">
+                    <div class="pulse-ring"></div>
+                    <span class="no-data-icon">🚀</span>
+                    <h3>Ready to Begin</h3>
+                    <p>Upload your resume PDF and click "Find Matching Jobs" to extract your skills and search live opportunities.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Progress / Processing Loading Modal Overlay -->
+    <div class="loading-overlay hidden" id="loading-overlay">
+        <div class="loading-card">
+            <div class="loading-logo">
+                <div class="double-spin"></div>
+                <span>⚡</span>
+            </div>
+            <h2>Running Job Targeting Pipeline</h2>
+            <p>Our CrewAI Agent team is analyzing your credentials and searching live vacancies...</p>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progress-fill" style="width: 5%;"></div>
+            </div>
+
+            <!-- Steps checklist indicators -->
+            <div class="progress-steps">
+                <div class="step" id="step-1">
+                    <span class="step-bullet">1</span>
+                    <span class="step-text">Lead Fact-Extractor: Parsing credentials...</span>
+                </div>
+                <div class="step" id="step-2">
+                    <span class="step-bullet">2</span>
+                    <span class="step-text">Safety Auditor: Checking credentials validation...</span>
+                </div>
+                <div class="step" id="step-3">
+                    <span class="step-bullet">3</span>
+                    <span class="step-text">Artifact Specialist: Assembling application parameters...</span>
+                </div>
+                <div class="step" id="step-4">
+                    <span class="step-bullet">4</span>
+                    <span class="step-text">Targeted Job Analyst: Searching active JSearch-v2...</span>
+                </div>
+                <div class="step" id="step-5">
+                    <span class="step-bullet">5</span>
+                    <span class="step-text">Ranking Manager: Compiling queue output...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/js/main.js"></script>
+</body>
+</html>
